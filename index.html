@@ -3,238 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spam OTP Sender - Professional Tools</title>
+    <title>Spam OTP Sender - Professional</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg: #0f1117;
-            --surface: #1a1d27;
-            --surface2: #222531;
-            --border: #2a2d3a;
-            --primary: #6c5ce7;
-            --primary-hover: #7d6ff0;
-            --danger: #e74c3c;
-            --success: #2ecc71;
-            --warning: #f39c12;
-            --text: #e4e6eb;
-            --text2: #a0a3b1;
-            --text3: #6b6e7d;
-            --radius: 12px;
-            --radius-sm: 8px;
-            --shadow: 0 4px 24px rgba(0,0,0,0.3);
+            --bg: #0f1117; --surface: #1a1d27; --surface2: #222531;
+            --border: #2a2d3a; --primary: #6c5ce7; --primary-hover: #7d6ff0;
+            --danger: #e74c3c; --success: #2ecc71; --warning: #f39c12;
+            --text: #e4e6eb; --text2: #a0a3b1; --text3: #6b6e7d;
+            --radius: 12px; --radius-sm: 8px;
         }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* LOADING */
+        .loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:24px;transition:opacity .5s,visibility .5s}
+        .loading-screen.hidden{opacity:0;visibility:hidden}
+        .loading-logo{font-size:2.5rem;font-weight:800;letter-spacing:-1px}
+        .loading-logo span{color:var(--primary)}
+        .loading-spinner{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .loading-text{color:var(--text2);font-size:.9rem}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            line-height: 1.6;
-        }
-
-        /* LOADING SCREEN */
-        .loading-screen {
-            position: fixed; inset: 0; background: var(--bg);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 9999; flex-direction: column; gap: 24px;
-            transition: opacity 0.5s, visibility 0.5s;
-        }
-        .loading-screen.hidden { opacity: 0; visibility: hidden; }
-        .loading-logo { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; }
-        .loading-logo span { color: var(--primary); }
-        .loading-spinner {
-            width: 48px; height: 48px; border: 3px solid var(--border);
-            border-top-color: var(--primary); border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .loading-text { color: var(--text2); font-size: 0.9rem; }
-
-        /* AUTH CONTAINER */
-        .auth-container {
-            min-height: 100vh; display: flex; align-items: center; justify-content: center;
-            padding: 20px;
-        }
-        .auth-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 40px; width: 100%;
-            max-width: 440px; box-shadow: var(--shadow);
-        }
-        .auth-logo { text-align: center; margin-bottom: 32px; font-size: 1.8rem; font-weight: 700; }
-        .auth-logo span { color: var(--primary); }
-        .auth-title { text-align: center; font-size: 1.4rem; font-weight: 600; margin-bottom: 8px; }
-        .auth-subtitle { text-align: center; color: var(--text2); font-size: 0.9rem; margin-bottom: 28px; }
-        .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; margin-bottom: 6px; font-size: 0.85rem; font-weight: 500; color: var(--text2); }
-        .form-group input {
-            width: 100%; padding: 12px 16px; background: var(--surface2);
-            border: 1px solid var(--border); border-radius: var(--radius-sm);
-            color: var(--text); font-size: 0.95rem; outline: none; transition: 0.3s;
-            font-family: 'Inter', sans-serif;
-        }
-        .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(108,92,231,0.15); }
-        .btn {
-            width: 100%; padding: 13px; border: none; border-radius: var(--radius-sm);
-            font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.3s;
-            font-family: 'Inter', sans-serif; letter-spacing: 0.3px;
-        }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 8px 25px rgba(108,92,231,0.3); }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
-        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
-        .btn-sm { width: auto; padding: 8px 18px; font-size: 0.85rem; }
-        .auth-link { text-align: center; margin-top: 18px; color: var(--text2); font-size: 0.9rem; }
-        .auth-link a { color: var(--primary); text-decoration: none; font-weight: 500; cursor: pointer; }
-        .alert {
-            padding: 12px 16px; border-radius: var(--radius-sm); margin-bottom: 18px;
-            font-size: 0.85rem; display: none;
-        }
-        .alert-error { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3); color: #e74c3c; }
-        .alert-success { background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3); color: #2ecc71; }
+        /* AUTH */
+        .auth-container{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+        .auth-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:40px;width:100%;max-width:440px;box-shadow:0 4px 24px rgba(0,0,0,.3)}
+        .auth-logo{text-align:center;margin-bottom:32px;font-size:1.8rem;font-weight:700}
+        .auth-logo span{color:var(--primary)}
+        .auth-title{text-align:center;font-size:1.4rem;font-weight:600;margin-bottom:8px}
+        .auth-subtitle{text-align:center;color:var(--text2);font-size:.9rem;margin-bottom:28px}
+        .form-group{margin-bottom:18px}
+        .form-group label{display:block;margin-bottom:6px;font-size:.85rem;font-weight:500;color:var(--text2)}
+        .form-group input,.form-group select{width:100%;padding:12px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.95rem;outline:none;transition:.3s;font-family:'Inter',sans-serif}
+        .form-group input:focus,.form-group select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(108,92,231,.15)}
+        .btn{width:100%;padding:13px;border:none;border-radius:var(--radius-sm);font-size:.95rem;font-weight:600;cursor:pointer;transition:.3s;font-family:'Inter',sans-serif;letter-spacing:.3px}
+        .btn-primary{background:var(--primary);color:white}
+        .btn-primary:hover{background:var(--primary-hover);transform:translateY(-1px);box-shadow:0 8px 25px rgba(108,92,231,.3)}
+        .btn-danger{background:var(--danger);color:white}
+        .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
+        .btn-outline:hover{border-color:var(--primary);color:var(--primary)}
+        .btn-sm{width:auto;padding:8px 18px;font-size:.85rem}
+        .auth-link{text-align:center;margin-top:18px;color:var(--text2);font-size:.9rem}
+        .auth-link a{color:var(--primary);text-decoration:none;font-weight:500;cursor:pointer}
+        .alert{padding:12px 16px;border-radius:var(--radius-sm);margin-bottom:18px;font-size:.85rem;display:none}
+        .alert-error{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);color:#e74c3c}
+        .alert-success{background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.3);color:#2ecc71}
 
         /* APP LAYOUT */
-        .app-layout { display: none; min-height: 100vh; }
-        .app-layout.active { display: flex; }
+        .app-layout{display:none;min-height:100vh}
+        .app-layout.active{display:flex}
 
         /* SIDEBAR */
-        .sidebar {
-            width: 260px; background: var(--surface); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; position: fixed; top: 0; left: 0;
-            bottom: 0; z-index: 100; transition: 0.3s;
-        }
-        .sidebar-logo { padding: 24px; font-size: 1.3rem; font-weight: 700; border-bottom: 1px solid var(--border); }
-        .sidebar-logo span { color: var(--primary); }
-        .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
-        .nav-section { margin-bottom: 8px; }
-        .nav-section-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text3); padding: 8px 12px; margin-top: 12px; }
-        .nav-item {
-            display: flex; align-items: center; gap: 12px; padding: 10px 14px;
-            border-radius: var(--radius-sm); cursor: pointer; transition: 0.2s;
-            color: var(--text2); font-size: 0.9rem; margin-bottom: 2px; text-decoration: none;
-        }
-        .nav-item:hover { background: var(--surface2); color: var(--text); }
-        .nav-item.active { background: rgba(108,92,231,0.15); color: var(--primary); font-weight: 500; }
-        .nav-item i { width: 20px; text-align: center; font-size: 1.1rem; }
-        .sidebar-footer { padding: 16px; border-top: 1px solid var(--border); }
-        .user-info { display: flex; align-items: center; gap: 12px; }
-        .user-avatar {
-            width: 40px; height: 40px; border-radius: 50%; background: var(--primary);
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 600; color: white; font-size: 0.9rem;
-        }
-        .user-name { font-weight: 500; font-size: 0.9rem; }
-        .user-email { color: var(--text3); font-size: 0.75rem; }
+        .sidebar{width:260px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:.3s}
+        .sidebar-logo{padding:24px;font-size:1.3rem;font-weight:700;border-bottom:1px solid var(--border)}
+        .sidebar-logo span{color:var(--primary)}
+        .sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto}
+        .nav-section{margin-bottom:8px}
+        .nav-section-title{font-size:.7rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);padding:8px 12px;margin-top:12px}
+        .nav-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:.2s;color:var(--text2);font-size:.9rem;margin-bottom:2px;text-decoration:none}
+        .nav-item:hover{background:var(--surface2);color:var(--text)}
+        .nav-item.active{background:rgba(108,92,231,.15);color:var(--primary);font-weight:500}
+        .nav-item i{width:20px;text-align:center;font-size:1.1rem}
+        .sidebar-footer{padding:16px;border-top:1px solid var(--border)}
+        .user-info{display:flex;align-items:center;gap:12px}
+        .user-avatar{width:40px;height:40px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:600;color:white;font-size:.9rem}
+        .user-name{font-weight:500;font-size:.9rem}
+        .user-email{color:var(--text3);font-size:.75rem}
+        .btn-logout{background:transparent;border:1px solid var(--border);color:var(--text2);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.8rem;margin-top:12px;width:100%}
+        .btn-logout:hover{background:rgba(231,76,60,.1);border-color:var(--danger);color:var(--danger)}
 
-        /* MAIN CONTENT */
-        .main-content {
-            flex: 1; margin-left: 260px; padding: 28px; min-height: 100vh;
-        }
-        .page { display: none; }
-        .page.active { display: block; }
-        .page-header { margin-bottom: 28px; }
-        .page-title { font-size: 1.6rem; font-weight: 700; }
-        .page-subtitle { color: var(--text2); font-size: 0.9rem; margin-top: 4px; }
+        /* MAIN */
+        .main-content{flex:1;margin-left:260px;padding:28px;min-height:100vh}
+        .page{display:none}
+        .page.active{display:block}
+        .page-header{margin-bottom:28px}
+        .page-title{font-size:1.6rem;font-weight:700}
+        .page-subtitle{color:var(--text2);font-size:.9rem;margin-top:4px}
 
         /* CARDS */
-        .card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 24px; margin-bottom: 20px;
-        }
-        .card-header { font-size: 1rem; font-weight: 600; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
-        .stat-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 12px; }
-        .stat-value { font-size: 1.8rem; font-weight: 700; }
-        .stat-label { color: var(--text2); font-size: 0.8rem; margin-top: 4px; }
+        .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px}
+        .card-header{font-size:1rem;font-weight:600;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+        .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+        .stat-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:12px}
+        .stat-value{font-size:1.8rem;font-weight:700}
+        .stat-label{color:var(--text2);font-size:.8rem;margin-top:4px}
 
         /* TABLES */
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-        th { color: var(--text2); font-weight: 500; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        .badge {
-            padding: 4px 10px; border-radius: 20px; font-size: 0.75rem;
-            font-weight: 500; display: inline-block;
-        }
-        .badge-success { background: rgba(46,204,113,0.15); color: #2ecc71; }
-        .badge-warning { background: rgba(243,156,18,0.15); color: #f39c12; }
-        .badge-danger { background: rgba(231,76,60,0.15); color: #e74c3c; }
-        .badge-primary { background: rgba(108,92,231,0.15); color: #8b7cf0; }
+        .table-container{overflow-x:auto}
+        table{width:100%;border-collapse:collapse}
+        th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);font-size:.9rem}
+        th{color:var(--text2);font-weight:500;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px}
+        .badge{padding:4px 10px;border-radius:20px;font-size:.75rem;font-weight:500;display:inline-block}
+        .badge-success{background:rgba(46,204,113,.15);color:#2ecc71}
+        .badge-warning{background:rgba(243,156,18,.15);color:#f39c12}
+        .badge-danger{background:rgba(231,76,60,.15);color:#e74c3c}
+        .badge-primary{background:rgba(108,92,231,.15);color:#8b7cf0}
 
         /* FORM */
-        .row { display: flex; gap: 16px; flex-wrap: wrap; }
-        .col { flex: 1; min-width: 200px; }
+        .row{display:flex;gap:16px;flex-wrap:wrap}
+        .col{flex:1;min-width:200px}
 
         /* TERMINAL */
-        .terminal-box {
-            background: #0a0b10; border: 1px solid var(--border); border-radius: var(--radius-sm);
-            padding: 16px; height: 250px; overflow-y: auto; font-family: 'SF Mono', 'Consolas', monospace;
-            font-size: 0.8rem; line-height: 1.7;
-        }
-        .terminal-box .t-success { color: #2ecc71; }
-        .terminal-box .t-error { color: #e74c3c; }
-        .terminal-box .t-info { color: #f39c12; }
-        .terminal-box .t-dim { color: #555; }
+        .terminal-box{background:#0a0b10;border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;height:250px;overflow-y:auto;font-family:'SF Mono','Consolas',monospace;font-size:.8rem;line-height:1.7}
+        .terminal-box .t-success{color:#2ecc71}
+        .terminal-box .t-error{color:#e74c3c}
+        .terminal-box .t-info{color:#f39c12}
+        .terminal-box .t-dim{color:#555}
 
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .sidebar { width: 0; overflow: hidden; }
-            .sidebar.open { width: 260px; }
-            .main-content { margin-left: 0; }
-            .auth-card { padding: 24px; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-        }
+        /* PROGRESS */
+        .progress-bar-bg{background:var(--surface2);border-radius:8px;height:8px;overflow:hidden;margin-bottom:8px}
+        .progress-bar-fill{height:100%;background:var(--primary);width:0%;transition:width .3s;border-radius:8px}
 
         /* TOAST */
-        .toast {
-            position: fixed; top: 20px; right: 20px; z-index: 9999;
-            padding: 14px 20px; border-radius: var(--radius-sm); color: white;
-            font-weight: 500; font-size: 0.9rem; animation: slideIn 0.3s ease;
-            max-width: 400px;
-        }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        .toast-success { background: #2ecc71; }
-        .toast-error { background: #e74c3c; }
+        .toast{position:fixed;top:20px;right:20px;z-index:9999;padding:14px 20px;border-radius:var(--radius-sm);color:white;font-weight:500;font-size:.9rem;animation:slideIn .3s ease;max-width:400px}
+        @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+        .toast-success{background:#2ecc71}
+        .toast-error{background:#e74c3c}
+
+        /* RESPONSIVE */
+        @media(max-width:768px){.sidebar{width:0;overflow:hidden}.sidebar.open{width:260px}.main-content{margin-left:0}.auth-card{padding:24px}.stats-grid{grid-template-columns:1fr 1fr}.row{flex-direction:column}}
+        .hamburger{display:none;position:fixed;top:16px;left:16px;z-index:101;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:10px;border-radius:8px;cursor:pointer;font-size:1.2rem}
+        @media(max-width:768px){.hamburger{display:block}}
     </style>
 </head>
 <body>
 
-<!-- LOADING SCREEN -->
+<!-- LOADING -->
 <div class="loading-screen" id="loadingScreen">
     <div class="loading-logo">Spam<span>OTP</span></div>
     <div class="loading-spinner"></div>
     <div class="loading-text" id="loadingText">Memuat aplikasi...</div>
 </div>
 
-<!-- AUTH CONTAINER -->
-<div class="auth-container" id="authContainer" style="display:none;">
-    <div class="auth-card" id="authCard"></div>
-</div>
+<!-- HAMBURGER MOBILE -->
+<button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()">☰</button>
 
-<!-- APP LAYOUT -->
+<!-- AUTH -->
+<div class="auth-container" id="authContainer" style="display:none;"><div class="auth-card" id="authCard"></div></div>
+
+<!-- APP -->
 <div class="app-layout" id="appLayout">
-    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-logo">Spam<span>OTP</span></div>
         <nav class="sidebar-nav">
-            <div class="nav-section">
-                <div class="nav-section-title">Main Menu</div>
+            <div class="nav-section"><div class="nav-section-title">Main</div>
                 <a class="nav-item active" data-page="dashboard"><i class="fas fa-th-large"></i> Dashboard</a>
                 <a class="nav-item" data-page="sender"><i class="fas fa-paper-plane"></i> Send OTP</a>
                 <a class="nav-item" data-page="history"><i class="fas fa-history"></i> History</a>
             </div>
             <div class="nav-section" id="premiumMenu">
-                <div class="nav-section-title">Premium</div>
-                <a class="nav-item" data-page="premium"><i class="fas fa-crown"></i> Upgrade</a>
+                <div class="nav-section-title">Upgrade</div>
                 <a class="nav-item" data-page="redeem"><i class="fas fa-ticket-alt"></i> Redeem Token</a>
             </div>
             <div class="nav-section" id="adminMenu" style="display:none;">
                 <div class="nav-section-title">Admin</div>
-                <a class="nav-item" data-page="admin"><i class="fas fa-shield-alt"></i> Admin Panel</a>
+                <a class="nav-item" data-page="admin"><i class="fas fa-shield-alt"></i> Panel Admin</a>
                 <a class="nav-item" data-page="generate-token"><i class="fas fa-key"></i> Generate Token</a>
                 <a class="nav-item" data-page="users"><i class="fas fa-users"></i> Users</a>
             </div>
@@ -242,229 +167,107 @@
         <div class="sidebar-footer">
             <div class="user-info">
                 <div class="user-avatar" id="userAvatar">U</div>
-                <div>
-                    <div class="user-name" id="sidebarUserName">User</div>
-                    <div class="user-email" id="sidebarUserEmail">user@email.com</div>
-                </div>
+                <div><div class="user-name" id="sidebarUserName">User</div><div class="user-email" id="sidebarUserEmail">...</div></div>
             </div>
+            <button class="btn-logout" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-        <!-- DASHBOARD PAGE -->
+    <main class="main-content" id="mainContent">
+        <!-- DASHBOARD -->
         <div class="page active" id="page-dashboard">
-            <div class="page-header">
-                <h1 class="page-title">Dashboard</h1>
-                <p class="page-subtitle">Selamat datang kembali, <span id="dashName">User</span></p>
-            </div>
+            <div class="page-header"><h1 class="page-title">Dashboard</h1><p class="page-subtitle">Selamat datang, <span id="dashName">User</span></p></div>
             <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon" style="background:rgba(108,92,231,0.15);color:#6c5ce7;"><i class="fas fa-paper-plane"></i></div>
-                    <div class="stat-value" id="statTotalSent">0</div>
-                    <div class="stat-label">Total OTP Terkirim</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon" style="background:rgba(46,204,113,0.15);color:#2ecc71;"><i class="fas fa-check-circle"></i></div>
-                    <div class="stat-value" id="statSuccessRate">0%</div>
-                    <div class="stat-label">Success Rate</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon" style="background:rgba(243,156,18,0.15);color:#f39c12;"><i class="fas fa-coins"></i></div>
-                    <div class="stat-value" id="statBalance">0</div>
-                    <div class="stat-label">Credit Balance</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon" style="background:rgba(231,76,60,0.15);color:#e74c3c;"><i class="fas fa-bolt"></i></div>
-                    <div class="stat-value" id="statTodaySent">0</div>
-                    <div class="stat-label">Today Sent</div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">Quick Actions</div>
-                <div class="row">
-                    <button class="btn btn-primary btn-sm" onclick="navigateTo('sender')"><i class="fas fa-paper-plane"></i> Send OTP Now</button>
-                    <button class="btn btn-outline btn-sm" onclick="navigateTo('premium')"><i class="fas fa-crown"></i> Upgrade Premium</button>
-                </div>
+                <div class="stat-card"><div class="stat-icon" style="background:rgba(108,92,231,.15);color:#6c5ce7"><i class="fas fa-paper-plane"></i></div><div class="stat-value" id="statTotalSent">0</div><div class="stat-label">Total Terkirim</div></div>
+                <div class="stat-card"><div class="stat-icon" style="background:rgba(46,204,113,.15);color:#2ecc71"><i class="fas fa-check-circle"></i></div><div class="stat-value" id="statSuccessRate">0%</div><div class="stat-label">Success Rate</div></div>
+                <div class="stat-card"><div class="stat-icon" style="background:rgba(243,156,18,.15);color:#f39c12"><i class="fas fa-coins"></i></div><div class="stat-value" id="statBalance">0</div><div class="stat-label">Credit</div></div>
+                <div class="stat-card"><div class="stat-icon" style="background:rgba(231,76,60,.15);color:#e74c3c"><i class="fas fa-bolt"></i></div><div class="stat-value" id="statTodaySent">0</div><div class="stat-label">Hari Ini</div></div>
             </div>
         </div>
 
-        <!-- SENDER PAGE -->
+        <!-- SENDER -->
         <div class="page" id="page-sender">
-            <div class="page-header">
-                <h1 class="page-title">Send OTP</h1>
-                <p class="page-subtitle">Kirim spam OTP ke nomor WhatsApp target</p>
-            </div>
+            <div class="page-header"><h1 class="page-title">Send OTP</h1><p class="page-subtitle">Kirim spam OTP ke nomor WhatsApp</p></div>
             <div class="card">
-                <div class="card-header">Target Information</div>
+                <div class="card-header">Target</div>
                 <div class="row">
-                    <div class="col">
-                        <div class="form-group"><label>Nomor Target (628xxx)</label><input type="text" id="targetNumber" placeholder="6281234567890"></div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group"><label>Jumlah Round</label><input type="number" id="roundCount" value="10" min="1" max="100"></div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group"><label>Delay (ms)</label>
-                            <select id="delay" style="width:100%;padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;">
-                                <option value="100">100ms - Ultra Cepat</option>
-                                <option value="200" selected>200ms - Cepat</option>
-                                <option value="500">500ms - Normal</option>
-                                <option value="1000">1000ms - Aman</option>
-                            </select>
-                        </div>
-                    </div>
+                    <div class="col"><div class="form-group"><label>Nomor (628xxx)</label><input type="text" id="targetNumber" placeholder="6281234567890"></div></div>
+                    <div class="col"><div class="form-group"><label>Rounds</label><input type="number" id="roundCount" value="10" min="1" max="100"></div></div>
+                    <div class="col"><div class="form-group"><label>Delay (ms)</label><select id="delay"><option value="100">100ms - Ultra</option><option value="200" selected>200ms - Cepat</option><option value="500">500ms - Normal</option><option value="1000">1000ms - Aman</option></select></div></div>
                 </div>
-                <button class="btn btn-primary" id="btnAttack" onclick="startAttack()" style="width:auto;padding:12px 32px;">
-                    <i class="fas fa-rocket"></i> Mulai Serangan
-                </button>
-                <button class="btn btn-danger" id="btnStop" onclick="stopAttack()" style="width:auto;padding:12px 32px;display:none;">
-                    <i class="fas fa-stop"></i> Stop
-                </button>
-                <div style="margin-top:16px;">
-                    <div style="background:var(--surface2);border-radius:8px;height:8px;overflow:hidden;margin-bottom:8px;">
-                        <div id="progressBar" style="height:100%;background:var(--primary);width:0%;transition:width 0.3s;"></div>
-                    </div>
-                    <small id="progressText" style="color:var(--text2);">0% - Siap</small>
+                <div style="display:flex;gap:10px;">
+                    <button class="btn btn-primary" id="btnAttack" onclick="startAttack()" style="width:auto;padding:12px 32px;"><i class="fas fa-rocket"></i> Mulai</button>
+                    <button class="btn btn-danger" id="btnStop" onclick="stopAttack()" style="width:auto;padding:12px 32px;display:none;"><i class="fas fa-stop"></i> Stop</button>
                 </div>
+                <div style="margin-top:16px;"><div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar"></div></div><small id="progressText" style="color:var(--text2)">0% - Siap</small></div>
             </div>
-            <div class="card">
-                <div class="card-header">Live Terminal</div>
-                <div class="terminal-box" id="terminal">
-                    <div><span class="t-dim">[SYSTEM]</span> <span class="t-info">Ready to send OTP. Enter target & press attack.</span></div>
-                </div>
-            </div>
+            <div class="card"><div class="card-header">Live Terminal</div><div class="terminal-box" id="terminal"><div><span class="t-dim">[SYSTEM]</span> <span class="t-info">Ready. Masukkan target & klik Mulai.</span></div></div></div>
         </div>
 
-        <!-- HISTORY PAGE -->
+        <!-- HISTORY -->
         <div class="page" id="page-history">
-            <div class="page-header">
-                <h1 class="page-title">History</h1>
-                <p class="page-subtitle">Riwayat pengiriman OTP</p>
-            </div>
-            <div class="card">
-                <div class="table-container">
-                    <table>
-                        <thead><tr><th>Date</th><th>Target</th><th>Sent</th><th>Failed</th><th>Rounds</th><th>Status</th></tr></thead>
-                        <tbody id="historyTable"><tr><td colspan="6" style="text-align:center;color:var(--text3);">Belum ada data</td></tr></tbody>
-                    </table>
-                </div>
-            </div>
+            <div class="page-header"><h1 class="page-title">History</h1><p class="page-subtitle">Riwayat pengiriman</p></div>
+            <div class="card"><div class="table-container"><table><thead><tr><th>Tanggal</th><th>Target</th><th>Sent</th><th>Failed</th><th>Rounds</th><th>Status</th></tr></thead><tbody id="historyTable"><tr><td colspan="6" style="text-align:center;color:var(--text3)">Belum ada data</td></tr></tbody></table></div></div>
         </div>
 
-        <!-- PREMIUM PAGE -->
-        <div class="page" id="page-premium">
-            <div class="page-header">
-                <h1 class="page-title">Upgrade Premium</h1>
-                <p class="page-subtitle">Dapatkan lebih banyak credit & fitur</p>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-card" style="text-align:center;">
-                    <div class="stat-icon" style="background:rgba(108,92,231,0.15);color:#6c5ce7;margin:0 auto 12px;"><i class="fas fa-star"></i></div>
-                    <div class="stat-value">1,000</div>
-                    <div class="stat-label">Credit</div>
-                    <p style="margin-top:8px;color:var(--text2);font-size:0.85rem;">Free</p>
-                </div>
-                <div class="stat-card" style="text-align:center;border:2px solid var(--primary);">
-                    <div class="stat-icon" style="background:rgba(108,92,231,0.15);color:#6c5ce7;margin:0 auto 12px;"><i class="fas fa-crown"></i></div>
-                    <div class="stat-value">10,000</div>
-                    <div class="stat-label">Credit</div>
-                    <p style="margin-top:8px;color:var(--primary);font-weight:600;">Premium</p>
-                </div>
-                <div class="stat-card" style="text-align:center;">
-                    <div class="stat-icon" style="background:rgba(243,156,18,0.15);color:#f39c12;margin:0 auto 12px;"><i class="fas fa-gem"></i></div>
-                    <div class="stat-value">50,000</div>
-                    <div class="stat-label">Credit</div>
-                    <p style="margin-top:8px;color:#f39c12;font-weight:600;">VIP</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- REDEEM PAGE -->
+        <!-- REDEEM -->
         <div class="page" id="page-redeem">
-            <div class="page-header">
-                <h1 class="page-title">Redeem Token</h1>
-                <p class="page-subtitle">Masukkan token premium untuk upgrade</p>
-            </div>
-            <div class="card">
-                <div class="form-group"><label>Token Code</label><input type="text" id="redeemToken" placeholder="Masukkan kode token..."></div>
-                <button class="btn btn-primary btn-sm" onclick="redeemToken()"><i class="fas fa-check"></i> Redeem</button>
-            </div>
+            <div class="page-header"><h1 class="page-title">Redeem Token</h1><p class="page-subtitle">Masukkan kode token premium</p></div>
+            <div class="card"><div class="form-group"><label>Kode Token</label><input type="text" id="redeemToken" placeholder="SPAM-XXXX-XXXX"></div><button class="btn btn-primary btn-sm" onclick="redeemToken()"><i class="fas fa-check"></i> Redeem</button></div>
         </div>
 
-        <!-- ADMIN PAGE -->
+        <!-- ADMIN -->
         <div class="page" id="page-admin">
-            <div class="page-header">
-                <h1 class="page-title">Admin Panel</h1>
-                <p class="page-subtitle">Kelola sistem & user</p>
-            </div>
+            <div class="page-header"><h1 class="page-title">Admin Panel</h1><p class="page-subtitle">Overview sistem</p></div>
             <div class="stats-grid">
-                <div class="stat-card"><div class="stat-value" id="adminTotalUsers">0</div><div class="stat-label">Total Users</div></div>
-                <div class="stat-card"><div class="stat-value" id="adminTotalSent">0</div><div class="stat-label">Total OTP Sent</div></div>
-                <div class="stat-card"><div class="stat-value" id="adminTokensGen">0</div><div class="stat-label">Tokens Generated</div></div>
+                <div class="stat-card"><div class="stat-value" id="adminTotalUsers">0</div><div class="stat-label">Users</div></div>
+                <div class="stat-card"><div class="stat-value" id="adminTotalSent">0</div><div class="stat-label">Total OTP</div></div>
+                <div class="stat-card"><div class="stat-value" id="adminTokensGen">0</div><div class="stat-label">Token Dibuat</div></div>
             </div>
         </div>
 
-        <!-- GENERATE TOKEN PAGE -->
+        <!-- GENERATE TOKEN -->
         <div class="page" id="page-generate-token">
-            <div class="page-header">
-                <h1 class="page-title">Generate Token</h1>
-                <p class="page-subtitle">Buat token premium untuk user</p>
-            </div>
+            <div class="page-header"><h1 class="page-title">Generate Token</h1><p class="page-subtitle">Buat token premium</p></div>
             <div class="card">
                 <div class="row">
-                    <div class="col"><div class="form-group"><label>Token Type</label><select id="tokenType" style="width:100%;padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;"><option value="premium">Premium (10K Credit)</option><option value="vip">VIP (50K Credit)</option><option value="ultimate">Ultimate (100K Credit)</option></select></div></div>
-                    <div class="col"><div class="form-group"><label>Duration (Days)</label><input type="number" id="tokenDuration" value="30"></div></div>
-                    <div class="col"><div class="form-group"><label>Quantity</label><input type="number" id="tokenQuantity" value="1" min="1" max="100"></div></div>
+                    <div class="col"><div class="form-group"><label>Tipe</label><select id="tokenType"><option value="premium">Premium (10K)</option><option value="vip">VIP (50K)</option><option value="ultimate">Ultimate (100K)</option></select></div></div>
+                    <div class="col"><div class="form-group"><label>Durasi (hari)</label><input type="number" id="tokenDuration" value="30"></div></div>
+                    <div class="col"><div class="form-group"><label>Jumlah</label><input type="number" id="tokenQuantity" value="1" min="1" max="100"></div></div>
                 </div>
                 <button class="btn btn-primary btn-sm" onclick="generateTokens()"><i class="fas fa-key"></i> Generate</button>
                 <div style="margin-top:16px;" id="generatedTokens"></div>
             </div>
         </div>
 
-        <!-- USERS PAGE -->
+        <!-- USERS -->
         <div class="page" id="page-users">
-            <div class="page-header">
-                <h1 class="page-title">Users</h1>
-                <p class="page-subtitle">Daftar semua user terdaftar</p>
-            </div>
-            <div class="card"><div class="table-container"><table><thead><tr><th>Email</th><th>Username</th><th>Premium</th><th>Credit</th><th>Joined</th></tr></thead><tbody id="usersTable"><tr><td colspan="5" style="text-align:center;color:var(--text3);">Loading...</td></tr></tbody></table></div></div>
+            <div class="page-header"><h1 class="page-title">Users</h1><p class="page-subtitle">Daftar user</p></div>
+            <div class="card"><div class="table-container"><table><thead><tr><th>ID</th><th>Nama</th><th>Premium</th><th>Credit</th><th>Join</th></tr></thead><tbody id="usersTable"><tr><td colspan="5" style="text-align:center;color:var(--text3)">Loading...</td></tr></tbody></table></div></div>
         </div>
     </main>
 </div>
 
-<!-- SUPABASE SDK -->
+<!-- SUPABASE CDN -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-// ==================== CONFIG ====================
+// ==================== KONFIGURASI ====================
 const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
 const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const API_BASE = '/api/send';
 
-// ==================== GLOBAL STATE ====================
-let currentUser = null;
-let userProfile = null;
-let isAttacking = false;
-let attackAbort = false;
-let totalSentGlobal = 0;
-let totalFailedGlobal = 0;
-let startTimeGlobal = null;
-let currentRoundGlobal = 0;
-let totalRoundsGlobal = 0;
+// ==================== STATE ====================
+let currentUser = null, userProfile = null, isAttacking = false, attackAbort = false;
+let totalSentGlobal = 0, totalFailedGlobal = 0, startTimeGlobal = null, currentRoundGlobal = 0, totalRoundsGlobal = 0;
 
-// ==================== LOADING ====================
+// ==================== INIT ====================
 window.addEventListener('load', async () => {
-    document.getElementById('loadingText').textContent = 'Memeriksa sesi...';
+    document.getElementById('loadingText').textContent = 'Cek sesi...';
     const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-        currentUser = session.user;
-        await loadUserProfile();
-        showApp();
-    } else {
-        showAuth('login');
-    }
+    if (session) { currentUser = session.user; await loadUserProfile(); showApp(); }
+    else showAuth('login');
     document.getElementById('loadingScreen').classList.add('hidden');
 });
 
@@ -472,85 +275,49 @@ window.addEventListener('load', async () => {
 function showAuth(type) {
     document.getElementById('authContainer').style.display = 'flex';
     document.getElementById('appLayout').classList.remove('active');
-    
     const card = document.getElementById('authCard');
     if (type === 'login') {
         card.innerHTML = `
-            <div class="auth-logo">Spam<span>OTP</span></div>
-            <div class="auth-title">Welcome Back</div>
-            <div class="auth-subtitle">Login ke akun kamu</div>
+            <div class="auth-logo">Spam<span>OTP</span></div><div class="auth-title">Welcome Back</div><div class="auth-subtitle">Login ke akun kamu</div>
             <div class="alert alert-error" id="authError"></div>
             <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="email@example.com"></div>
             <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="********"></div>
             <button class="btn btn-primary" onclick="handleLogin()">Login</button>
-            <div class="auth-link">Belum punya akun? <a onclick="showAuth('register')">Register</a></div>
-        `;
+            <div class="auth-link">Belum punya akun? <a onclick="showAuth('register')">Register</a></div>`;
     } else {
         card.innerHTML = `
-            <div class="auth-logo">Spam<span>OTP</span></div>
-            <div class="auth-title">Create Account</div>
-            <div class="auth-subtitle">Daftar akun baru</div>
+            <div class="auth-logo">Spam<span>OTP</span></div><div class="auth-title">Create Account</div><div class="auth-subtitle">Daftar akun baru</div>
             <div class="alert alert-error" id="authError"></div>
-            <div class="form-group"><label>Full Name</label><input type="text" id="regName" placeholder="Nama lengkap"></div>
+            <div class="form-group"><label>Nama</label><input type="text" id="regName" placeholder="Nama lengkap"></div>
             <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="email@example.com"></div>
             <div class="form-group"><label>Password</label><input type="password" id="regPassword" placeholder="Min. 6 karakter"></div>
             <button class="btn btn-primary" onclick="handleRegister()">Register</button>
-            <div class="auth-link">Sudah punya akun? <a onclick="showAuth('login')">Login</a></div>
-        `;
+            <div class="auth-link">Sudah punya akun? <a onclick="showAuth('login')">Login</a></div>`;
     }
 }
 
 async function handleLogin() {
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
+    const email = document.getElementById('loginEmail').value, password = document.getElementById('loginPassword').value;
     document.getElementById('authError').style.display = 'none';
-    
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-        document.getElementById('authError').textContent = error.message;
-        document.getElementById('authError').style.display = 'block';
-        return;
-    }
-    currentUser = data.user;
-    await loadUserProfile();
-    showApp();
+    if (error) { document.getElementById('authError').textContent = error.message; document.getElementById('authError').style.display = 'block'; return; }
+    currentUser = data.user; await loadUserProfile(); showApp();
 }
 
 async function handleRegister() {
-    const name = document.getElementById('regName').value;
-    const email = document.getElementById('regEmail').value;
-    const password = document.getElementById('regPassword').value;
+    const name = document.getElementById('regName').value, email = document.getElementById('regEmail').value, password = document.getElementById('regPassword').value;
     document.getElementById('authError').style.display = 'none';
-    
-    const { data, error } = await supabase.auth.signUp({
-        email, password,
-        options: { data: { full_name: name } }
-    });
-    if (error) {
-        document.getElementById('authError').textContent = error.message;
-        document.getElementById('authError').style.display = 'block';
-        return;
-    }
-    if (data.user) {
-        toast('Registrasi berhasil! Silakan cek email untuk verifikasi.', 'success');
-        showAuth('login');
-    }
+    const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { full_name: name } } });
+    if (error) { document.getElementById('authError').textContent = error.message; document.getElementById('authError').style.display = 'block'; return; }
+    toast('Registrasi berhasil! Silakan login.', 'success'); showAuth('login');
 }
 
-async function handleLogout() {
-    await supabase.auth.signOut();
-    currentUser = null;
-    userProfile = null;
-    document.getElementById('authContainer').style.display = 'flex';
-    document.getElementById('appLayout').classList.remove('active');
-    showAuth('login');
-}
+async function handleLogout() { await supabase.auth.signOut(); currentUser = null; userProfile = null; document.getElementById('authContainer').style.display = 'flex'; document.getElementById('appLayout').classList.remove('active'); showAuth('login'); }
 
-// ==================== USER PROFILE ====================
+// ==================== PROFILE ====================
 async function loadUserProfile() {
     const { data } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
-    userProfile = data;
-    updateUI();
+    userProfile = data; updateUI();
 }
 
 function updateUI() {
@@ -560,274 +327,138 @@ function updateUI() {
     document.getElementById('sidebarUserEmail').textContent = currentUser.email;
     document.getElementById('dashName').textContent = userProfile.full_name || 'User';
     document.getElementById('statBalance').textContent = userProfile.token_balance || 0;
-    
-    if (userProfile.is_admin) {
-        document.getElementById('adminMenu').style.display = 'block';
-    }
-    if (userProfile.is_premium) {
-        document.getElementById('premiumMenu').style.display = 'none';
-    }
-    loadDashboardStats();
-    loadHistory();
+    if (userProfile.is_admin) document.getElementById('adminMenu').style.display = 'block';
+    if (userProfile.is_premium) document.getElementById('premiumMenu').style.display = 'none';
+    loadDashboardStats(); loadHistory();
 }
 
 // ==================== NAVIGATION ====================
-document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', function(e) {
-        e.preventDefault();
-        const page = this.getAttribute('data-page');
-        navigateTo(page);
-    });
-});
-
+document.querySelectorAll('.nav-item').forEach(item => item.addEventListener('click', function(e) { e.preventDefault(); navigateTo(this.getAttribute('data-page')); }));
 function navigateTo(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    
-    const targetPage = document.getElementById(`page-${page}`);
-    if (targetPage) targetPage.classList.add('active');
-    
-    const targetNav = document.querySelector(`[data-page="${page}"]`);
-    if (targetNav) targetNav.classList.add('active');
-    
+    const tp = document.getElementById(`page-${page}`); if (tp) tp.classList.add('active');
+    const tn = document.querySelector(`[data-page="${page}"]`); if (tn) tn.classList.add('active');
     if (page === 'admin') loadAdminStats();
     if (page === 'users') loadUsers();
+    if (window.innerWidth < 768) document.getElementById('sidebar').classList.remove('open');
 }
-
-function showApp() {
-    document.getElementById('authContainer').style.display = 'none';
-    document.getElementById('appLayout').classList.add('active');
-    navigateTo('dashboard');
-}
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+function showApp() { document.getElementById('authContainer').style.display = 'none'; document.getElementById('appLayout').classList.add('active'); navigateTo('dashboard'); }
 
 // ==================== DASHBOARD ====================
 async function loadDashboardStats() {
     const { data: history } = await supabase.from('spam_history').select('*').eq('user_id', currentUser.id);
     if (history) {
-        const totalSent = history.reduce((sum, h) => sum + (h.total_sent || 0), 0);
-        const totalFailed = history.reduce((sum, h) => sum + (h.total_failed || 0), 0);
-        const total = totalSent + totalFailed;
-        document.getElementById('statTotalSent').textContent = totalSent;
-        document.getElementById('statSuccessRate').textContent = total > 0 ? Math.round((totalSent / total) * 100) + '%' : '0%';
-        
+        const ts = history.reduce((s, h) => s + (h.total_sent || 0), 0), tf = history.reduce((s, h) => s + (h.total_failed || 0), 0), total = ts + tf;
+        document.getElementById('statTotalSent').textContent = ts;
+        document.getElementById('statSuccessRate').textContent = total > 0 ? Math.round((ts / total) * 100) + '%' : '0%';
         const today = new Date().toISOString().split('T')[0];
-        const todayHistory = history.filter(h => h.created_at?.startsWith(today));
-        document.getElementById('statTodaySent').textContent = todayHistory.reduce((sum, h) => sum + (h.total_sent || 0), 0);
+        document.getElementById('statTodaySent').textContent = history.filter(h => h.created_at?.startsWith(today)).reduce((s, h) => s + (h.total_sent || 0), 0);
     }
 }
 
 // ==================== SENDER ====================
 function terminalLog(msg, type) {
-    const t = document.getElementById('terminal');
-    const cls = { success: 't-success', error: 't-error', info: 't-info' }[type] || 't-info';
+    const t = document.getElementById('terminal'), cls = { success: 't-success', error: 't-error', info: 't-info' }[type] || 't-info';
     const time = new Date().toLocaleTimeString('id-ID', { hour12: false });
-    t.innerHTML += `<div><span class="t-dim">[${time}]</span> <span class="${cls}">${msg}</span></div>`;
-    t.scrollTop = t.scrollHeight;
+    t.innerHTML += `<div><span class="t-dim">[${time}]</span> <span class="${cls}">${msg}</span></div>`; t.scrollTop = t.scrollHeight;
 }
 
 async function sendOneRound(phone) {
     try {
-        const res = await fetch(API_BASE, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone })
-        });
+        const res = await fetch(API_BASE, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone }) });
         return await res.json();
-    } catch (e) {
-        return { success: false, totalApis: 40, successCount: 0, failedCount: 40, results: [] };
-    }
+    } catch (e) { return { success: false, totalApis: 40, successCount: 0, failedCount: 40, results: [] }; }
 }
 
 async function startAttack() {
-    if (!userProfile) return toast('Silakan login dulu', 'error');
-    if (userProfile.token_balance <= 0 && !userProfile.is_premium) return toast('Credit habis. Upgrade ke premium.', 'error');
-    
+    if (!userProfile) return toast('Login dulu!', 'error');
+    if ((userProfile.token_balance || 0) <= 0 && !userProfile.is_premium) return toast('Credit habis! Redeem token.', 'error');
     const phone = document.getElementById('targetNumber').value.replace(/[^0-9]/g, '');
-    const rounds = parseInt(document.getElementById('roundCount').value);
-    const delay = parseInt(document.getElementById('delay').value);
-    
+    const rounds = parseInt(document.getElementById('roundCount').value), delay = parseInt(document.getElementById('delay').value);
     if (!phone || phone.length < 10) return toast('Nomor tidak valid!', 'error');
-    if (!phone.startsWith('62')) return toast('Nomor harus diawali 62!', 'error');
+    if (!phone.startsWith('62')) return toast('Nomor harus 628xxx!', 'error');
     if (rounds < 1 || rounds > 100) return toast('Round 1-100!', 'error');
-    
-    isAttacking = true; attackAbort = false;
-    totalSentGlobal = 0; totalFailedGlobal = 0;
-    currentRoundGlobal = 0; totalRoundsGlobal = rounds;
-    startTimeGlobal = Date.now();
-    
-    document.getElementById('btnAttack').style.display = 'none';
-    document.getElementById('btnStop').style.display = 'inline-block';
-    
-    terminalLog('══════════════════', 'info');
-    terminalLog(`Target: ${phone} | Rounds: ${rounds}`, 'info');
-    
+    isAttacking = true; attackAbort = false; totalSentGlobal = 0; totalFailedGlobal = 0; currentRoundGlobal = 0; totalRoundsGlobal = rounds; startTimeGlobal = Date.now();
+    document.getElementById('btnAttack').style.display = 'none'; document.getElementById('btnStop').style.display = 'inline-block';
+    terminalLog('══════════════════', 'info'); terminalLog(`Target: ${phone} | ${rounds} rounds | 40 APIs`, 'info');
     for (let r = 0; r < rounds; r++) {
-        if (attackAbort) break;
-        currentRoundGlobal = r + 1;
-        
+        if (attackAbort) break; currentRoundGlobal = r + 1;
         const result = await sendOneRound(phone);
-        totalSentGlobal += result.successCount || 0;
-        totalFailedGlobal += result.failedCount || 0;
-        
-        if (result.results) {
-            const successApis = result.results.filter(a => a.success);
-            terminalLog(`Round ${currentRoundGlobal}: ${successApis.length} berhasil`, 'success');
-        }
-        
+        totalSentGlobal += result.successCount || 0; totalFailedGlobal += result.failedCount || 0;
+        if (result.results) { const sa = result.results.filter(a => a.success); terminalLog(`Round ${currentRoundGlobal}: ${sa.length} sukses`, 'success'); }
         const progress = Math.round((currentRoundGlobal / totalRoundsGlobal) * 100);
         document.getElementById('progressBar').style.width = progress + '%';
-        document.getElementById('progressText').textContent = `${progress}% - Round ${currentRoundGlobal}/${totalRoundsGlobal}`;
-        
+        document.getElementById('progressText').textContent = `${progress}% - ${currentRoundGlobal}/${totalRoundsGlobal}`;
         if (r < rounds - 1 && !attackAbort) await new Promise(r => setTimeout(r, delay));
     }
-    
     finishAttack(phone);
 }
 
-function stopAttack() { attackAbort = true; terminalLog('STOP diminta...', 'error'); }
+function stopAttack() { attackAbort = true; terminalLog('STOP...', 'error'); }
 
 async function finishAttack(phone) {
-    isAttacking = false;
-    const elapsed = ((Date.now() - startTimeGlobal) / 1000).toFixed(1);
-    
-    document.getElementById('btnAttack').style.display = 'inline-block';
-    document.getElementById('btnStop').style.display = 'none';
-    document.getElementById('progressBar').style.width = '100%';
-    document.getElementById('progressText').textContent = 'Selesai';
-    
+    isAttacking = false; const elapsed = ((Date.now() - startTimeGlobal) / 1000).toFixed(1);
+    document.getElementById('btnAttack').style.display = 'inline-block'; document.getElementById('btnStop').style.display = 'none';
     terminalLog(`SELESAI! Sent: ${totalSentGlobal} | Gagal: ${totalFailedGlobal} | ${elapsed}s`, 'success');
-    
-    // Save to history
-    await supabase.from('spam_history').insert({
-        user_id: currentUser.id,
-        target_number: phone,
-        total_sent: totalSentGlobal,
-        total_failed: totalFailedGlobal,
-        apis_used: 40,
-        rounds: totalRoundsGlobal,
-        status: 'completed'
-    });
-    
-    // Update credit
-    const newBalance = Math.max(0, (userProfile.token_balance || 0) - totalSentGlobal);
-    await supabase.from('profiles').update({ token_balance: newBalance }).eq('id', currentUser.id);
-    userProfile.token_balance = newBalance;
-    updateUI();
-    
-    setTimeout(() => {
-        document.getElementById('progressBar').style.width = '0%';
-        document.getElementById('progressText').textContent = '0% - Siap';
-    }, 3000);
+    await supabase.from('spam_history').insert({ user_id: currentUser.id, target_number: phone, total_sent: totalSentGlobal, total_failed: totalFailedGlobal, apis_used: 40, rounds: totalRoundsGlobal, status: 'completed' });
+    const nb = Math.max(0, (userProfile.token_balance || 0) - totalSentGlobal);
+    await supabase.from('profiles').update({ token_balance: nb }).eq('id', currentUser.id);
+    userProfile.token_balance = nb; updateUI();
+    setTimeout(() => { document.getElementById('progressBar').style.width = '0%'; document.getElementById('progressText').textContent = '0% - Siap'; }, 3000);
 }
 
 // ==================== HISTORY ====================
 async function loadHistory() {
     const { data } = await supabase.from('spam_history').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false }).limit(20);
-    if (data && data.length > 0) {
-        document.getElementById('historyTable').innerHTML = data.map(h => `
-            <tr>
-                <td>${new Date(h.created_at).toLocaleDateString('id-ID')}</td>
-                <td>${h.target_number}</td>
-                <td>${h.total_sent}</td>
-                <td>${h.total_failed}</td>
-                <td>${h.rounds}</td>
-                <td><span class="badge badge-success">${h.status}</span></td>
-            </tr>
-        `).join('');
-    }
+    if (data && data.length > 0) document.getElementById('historyTable').innerHTML = data.map(h => `<tr><td>${new Date(h.created_at).toLocaleDateString('id-ID')}</td><td>${h.target_number}</td><td>${h.total_sent}</td><td>${h.total_failed}</td><td>${h.rounds}</td><td><span class="badge badge-success">${h.status}</span></td></tr>`).join('');
 }
 
-// ==================== REDEEM TOKEN ====================
+// ==================== REDEEM ====================
 async function redeemToken() {
     const code = document.getElementById('redeemToken').value.trim();
-    if (!code) return toast('Masukkan kode token!', 'error');
-    
+    if (!code) return toast('Masukkan kode!', 'error');
     const { data: token } = await supabase.from('tokens').select('*').eq('token_code', code).eq('is_used', false).single();
-    if (!token) return toast('Token tidak valid atau sudah dipakai!', 'error');
-    
+    if (!token) return toast('Token tidak valid/sudah dipakai!', 'error');
     await supabase.from('tokens').update({ is_used: true, used_by: currentUser.id, used_at: new Date() }).eq('id', token.id);
-    await supabase.from('profiles').update({
-        token_balance: (userProfile.token_balance || 0) + token.value,
-        is_premium: true
-    }).eq('id', currentUser.id);
-    
-    userProfile.token_balance = (userProfile.token_balance || 0) + token.value;
-    userProfile.is_premium = true;
-    updateUI();
-    toast(`Token redeemed! +${token.value} credit`, 'success');
+    await supabase.from('profiles').update({ token_balance: (userProfile.token_balance || 0) + token.value, is_premium: true }).eq('id', currentUser.id);
+    userProfile.token_balance = (userProfile.token_balance || 0) + token.value; userProfile.is_premium = true;
+    updateUI(); toast(`+${token.value} credit!`, 'success');
 }
 
 // ==================== ADMIN ====================
 async function loadAdminStats() {
-    const { count: users } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
-    const { count: tokens } = await supabase.from('tokens').select('*', { count: 'exact', head: true });
-    const { data: history } = await supabase.from('spam_history').select('total_sent');
-    
-    document.getElementById('adminTotalUsers').textContent = users || 0;
-    document.getElementById('adminTokensGen').textContent = tokens || 0;
-    document.getElementById('adminTotalSent').textContent = history ? history.reduce((s, h) => s + (h.total_sent || 0), 0) : 0;
+    const { count: u } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+    const { count: t } = await supabase.from('tokens').select('*', { count: 'exact', head: true });
+    const { data: h } = await supabase.from('spam_history').select('total_sent');
+    document.getElementById('adminTotalUsers').textContent = u || 0;
+    document.getElementById('adminTokensGen').textContent = t || 0;
+    document.getElementById('adminTotalSent').textContent = h ? h.reduce((s, x) => s + (x.total_sent || 0), 0) : 0;
 }
 
 async function loadUsers() {
     const { data } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
-    if (data) {
-        document.getElementById('usersTable').innerHTML = data.map(u => `
-            <tr>
-                <td>${u.id.substring(0,8)}...</td>
-                <td>${u.username || u.full_name || '-'}</td>
-                <td>${u.is_premium ? '<span class="badge badge-primary">Premium</span>' : '<span class="badge badge-warning">Free</span>'}</td>
-                <td>${u.token_balance || 0}</td>
-                <td>${new Date(u.created_at).toLocaleDateString('id-ID')}</td>
-            </tr>
-        `).join('');
-    }
+    if (data) document.getElementById('usersTable').innerHTML = data.map(u => `<tr><td>${u.id.substring(0,8)}...</td><td>${u.full_name || '-'}</td><td>${u.is_premium ? '<span class="badge badge-primary">Premium</span>' : '<span class="badge badge-warning">Free</span>'}</td><td>${u.token_balance || 0}</td><td>${new Date(u.created_at).toLocaleDateString('id-ID')}</td></tr>`).join('');
 }
 
 async function generateTokens() {
-    const type = document.getElementById('tokenType').value;
-    const duration = parseInt(document.getElementById('tokenDuration').value);
-    const quantity = parseInt(document.getElementById('tokenQuantity').value);
-    
-    const values = { premium: 10000, vip: 50000, ultimate: 100000 };
-    const tokens = [];
-    
+    const type = document.getElementById('tokenType').value, duration = parseInt(document.getElementById('tokenDuration').value), quantity = parseInt(document.getElementById('tokenQuantity').value);
+    const values = { premium: 10000, vip: 50000, ultimate: 100000 }, tokens = [];
     for (let i = 0; i < quantity; i++) {
-        const code = 'SPAM-' + Math.random().toString(36).substring(2, 10).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
-        tokens.push({
-            token_code: code,
-            token_type: type,
-            duration_days: duration,
-            value: values[type],
-            created_by: currentUser.id
-        });
+        tokens.push({ token_code: 'SPAM-' + Math.random().toString(36).substring(2, 10).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase(), token_type: type, duration_days: duration, value: values[type], created_by: currentUser.id });
     }
-    
     const { error } = await supabase.from('tokens').insert(tokens);
-    if (error) return toast('Gagal generate token!', 'error');
-    
-    document.getElementById('generatedTokens').innerHTML = `
-        <div class="alert alert-success" style="display:block;">
-            <strong>${quantity} Token Generated!</strong><br>
-            ${tokens.map(t => `<code style="background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:4px;margin:2px;display:inline-block;">${t.token_code}</code>`).join(' ')}
-        </div>
-    `;
-    toast(`${quantity} token berhasil dibuat!`, 'success');
+    if (error) return toast('Gagal!', 'error');
+    document.getElementById('generatedTokens').innerHTML = `<div class="alert alert-success" style="display:block;"><strong>${quantity} Token Dibuat:</strong><br>${tokens.map(t => `<code style="background:rgba(0,0,0,.3);padding:2px 6px;border-radius:4px;margin:2px;display:inline-block;">${t.token_code}</code>`).join(' ')}</div>`;
+    toast(`${quantity} token berhasil!`, 'success');
 }
 
 // ==================== TOAST ====================
-function toast(msg, type = 'success') {
-    const t = document.createElement('div');
-    t.className = `toast toast-${type}`;
-    t.textContent = msg;
-    document.body.appendChild(t);
-    setTimeout(() => t.remove(), 3000);
-}
+function toast(msg, type = 'success') { const t = document.createElement('div'); t.className = `toast toast-${type}`; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
 
 // ==================== KEYBOARD ====================
-document.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !isAttacking && document.activeElement?.id === 'targetNumber') startAttack();
-    if (e.key === 'Escape' && isAttacking) stopAttack();
-});
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && !isAttacking && document.activeElement?.id === 'targetNumber') startAttack(); if (e.key === 'Escape' && isAttacking) stopAttack(); });
 </script>
 </body>
 </html>
